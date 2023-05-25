@@ -1,0 +1,23 @@
+const mongoose = require('mongoose');
+
+const Schema = mongoose.Schema;
+
+const mySchema = new Schema({
+    id: {
+        type: Schema.ObjectId,
+    },
+    nombreCompleto: {
+        type: String,
+        required: true,
+    },
+    telefono: {
+        type: String,
+    },
+    dni: {
+        type: String,
+        required: true
+    }
+});
+
+const model = mongoose.model('Cliente', mySchema);
+module.exports = model;
