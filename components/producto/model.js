@@ -13,6 +13,9 @@ const mySchema = new Schema({
     codigo: {
         type: String,
     },
+    imagen : {
+        type: String,
+    },
     numeracion: {
         type: String,
     },

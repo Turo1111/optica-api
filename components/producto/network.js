@@ -2,9 +2,11 @@ const express = require('express');
 const response = require('../../network/response');
 const controller = require('./controller');
 const router = express.Router();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
-router.post('/', function(req, res) {
-    controller.addProducto(req.body)
+router.post('/', upload.single('imagen'), function(req, res) {
+    controller.addProducto(req.body, req.file)
         .then(data => {
             return response.success(req, res, data, 200);
         })

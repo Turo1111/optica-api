@@ -3,6 +3,7 @@ const response = require('../../network/response');
 const controller = require('./controller');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 router.post('/', function(req, res) {
     controller.findExist(req.body.usuario)
@@ -47,10 +48,10 @@ router.post('/login', function(req, res) {
                     }
                  })
             }else{
-                /* const token = jwt.sign({ usuario: data.usuario }, secretKey); */
+                const token = jwt.sign({ usuario: data.usuario }, 'a5y9k88dfrt52bnm');
                 return res.status(200).json({
                   ok: true,
-                  /* token: token, */
+                  token: token,
                   data: data
                 });
             }
