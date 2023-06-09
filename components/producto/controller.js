@@ -4,24 +4,85 @@ const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
 
+const imageDir = path.join(__dirname, '..','..', 'public')
+
 function addProducto(producto, imagenFile) {
     if (!producto) {
         return Promise.reject('Invalid user list');
     } 
 
+    console.log("Imagen file",imagenFile)
+
     let imagenPath = '';
+
     if (imagenFile) {
         // Guardar la imagen en el servidor
         imagenPath = saveImages(imagenFile);
+        console.log("Imagen path",imagenPath)
     }
 
     const productoData = {
         ...producto,
-        idCategoria: new mongoose.Types.ObjectId(producto.idCategoria),
+        idCategoria: new mongoose.Types.ObjectId(producto.categoria),
         imagen: imagenPath,
     };
 
+    if (producto.marca) {
+        productoData.idMarca = new mongoose.Types.ObjectId(producto.marca);
+      }
+      
+      if (producto.color) {
+        productoData.idColor = new mongoose.Types.ObjectId(producto.color);
+      }
+
     return store.add(productoData);
+}
+
+function getProducto() {
+    return store.get();
+}
+
+
+function patchProducto(idProducto, producto, imagenFile) {
+
+    if (producto.imagen) {
+        deleteImage(producto.imagen)
+    }
+
+    console.log("Imagen file",imagenFile)
+
+    let imagenPath = '';
+
+    if (imagenFile) {
+        // Guardar la imagen en el servidor
+        imagenPath = saveImages(imagenFile);
+        console.log("Imagen path",imagenPath)
+    }
+
+    const productoData = {
+        ...producto,
+        imagen: imagenPath,
+    };
+
+    if (producto.categoria) {
+        if ( isObjectId(producto.categoria)) {
+            productoData.idCategoria = new mongoose.Types.ObjectId(producto.categoria);
+        }
+    }
+
+    if (producto.marca) {
+        if ( isObjectId(producto.marca)) {
+            productoData.idMarca = new mongoose.Types.ObjectId(producto.marca);
+        }
+    }
+      
+    if (producto.color) {
+        if (isObjectId(producto.color)) {
+            productoData.idColor = new mongoose.Types.ObjectId(producto.color);
+        }
+    }
+
+    return store.patch(idProducto, productoData);
 }
 
 function saveImages(file){
@@ -50,15 +111,22 @@ function saveImages(file){
     return '/images/' + file.originalname;
 }
 
-function getProducto() {
-    return store.get();
+function isObjectId(variable) {
+    return mongoose.Types.ObjectId.isValid(variable);
 }
 
-
-function patchProducto(idProducto, producto) {
-    return store.patch(idProducto, producto);
-}
-
+function deleteImage(filename) {
+    const imagePath = path.join(imageDir, filename);
+  
+    // Verificar si el archivo existe
+    if (fs.existsSync(imagePath)) {
+      // Eliminar el archivo
+      fs.unlinkSync(imagePath);
+      console.log('Imagen eliminada:', filename);
+    } else {
+      console.log('La imagen no existe:', filename);
+    }
+  }
 
 module.exports = {
     addProducto,

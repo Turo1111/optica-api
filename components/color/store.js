@@ -5,6 +5,10 @@ function addColor(color) {
     return col.save();
 }
 
+function findExist(descripcion) {
+    return Model.findOne({descripcion: descripcion});
+}
+
 function getColor() {
     return Model.find()
 }
@@ -19,5 +23,6 @@ function patchColor(idColor, color) {
 module.exports = {
     add: addColor,
 	get: getColor,
-    patch: patchColor
+    patch: patchColor,
+    find: findExist,
 }

@@ -3,6 +3,7 @@ const response = require('../../network/response');
 const controller = require('./controller');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const {emitSocket} = require('../../socket')
 
 router.post('/', function(req, res) {
     controller.findExist(req.body.dni)
@@ -10,6 +11,10 @@ router.post('/', function(req, res) {
             if(!cliente){
                 controller.addCliente(req.body)
                     .then(data => {
+                        emitSocket('cliente', {
+                            action: 'create',
+                            res: data
+                        });
                         return response.success(req, res, data, 200);
                     })
                     .catch(err => {
@@ -39,6 +44,10 @@ router.get('/', function(req, res) {
 router.patch('/:idCliente', function(req, res) {
     controller.patchCliente(req.params.idCliente, req.body)
         .then(data => {
+            emitSocket('cliente', {
+                action: 'patch',
+                res: req.body
+            });
             response.success(req, res, data, 200);
         })
         .catch(err => {

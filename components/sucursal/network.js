@@ -2,10 +2,15 @@ const express = require('express');
 const response = require('../../network/response');
 const controller = require('./controller');
 const router = express.Router();
+const {emitSocket} = require('../../socket')
 
 router.post('/', function(req, res) {
     controller.addSucursal(req.body)
         .then(data => {
+            emitSocket('sucursal', {
+                action: 'create',
+                res: data
+            });
             return response.success(req, res, data, 200);
         })
         .catch(err => {
@@ -27,6 +32,10 @@ router.get('/', function(req, res) {
 router.patch('/:idSucursal', function(req, res) {
     controller.patchSucursal(req.params.idSucursal, req.body)
         .then(data => {
+            emitSocket('sucursal', {
+                action: 'patch',
+                res: req.body
+            });
             response.success(req, res, data, 200);
         })
         .catch(err => {

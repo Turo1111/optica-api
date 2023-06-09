@@ -2,10 +2,15 @@ const express = require('express');
 const response = require('../../network/response');
 const controller = require('./controller');
 const router = express.Router();
+const {emitSocket} = require('../../socket')
 
 router.post('/', function(req, res) {
     controller.addOrden(req.body)
         .then(data => {
+            emitSocket('orden', {
+                action: 'create',
+                res: data
+            });
             return response.success(req, res, data, 200);
         })
         .catch(err => {
@@ -27,6 +32,10 @@ router.get('/', function(req, res) {
 router.patch('/:idOrden', function(req, res) {
     controller.patchOrden(req.params.idOrden, req.body)
         .then(data => {
+            emitSocket('orden', {
+                action: 'patch',
+                res: req.body
+            });
             response.success(req, res, data, 200);
         })
         .catch(err => {

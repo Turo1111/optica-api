@@ -10,6 +10,7 @@ function addEmpleado(empleado) {
     return store.add({
         ...empleado, 
         idSucursal: new mongoose.Types.ObjectId(empleado.idSucursal),
+        idRol: new mongoose.Types.ObjectId(empleado.idRol),
         password: bcrypt.hashSync(empleado.password, 10)
     });
 }

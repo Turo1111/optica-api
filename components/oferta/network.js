@@ -2,6 +2,7 @@ const express = require('express');
 const response = require('../../network/response');
 const controller = require('./controller');
 const router = express.Router();
+const {emitSocket} = require('../../socket')
 
 router.post('/', function(req, res) {
     controller.findExist(req.body.idProducto)
@@ -9,6 +10,10 @@ router.post('/', function(req, res) {
             if(!oferta){
                 controller.addOferta(req.body)
                     .then(data => {
+                        emitSocket('oferta', {
+                            action: 'create',
+                            res: data
+                        });
                         return response.success(req, res, data, 200);
                     })
                     .catch(err => {
@@ -38,6 +43,10 @@ router.get('/', function(req, res) {
 router.patch('/:idOferta', function(req, res) {
     controller.patchOferta(req.params.idOferta, req.body)
         .then(data => {
+            emitSocket('oferta', {
+                action: 'patch',
+                res: req.body
+            });
             response.success(req, res, data, 200);
         })
         .catch(err => {

@@ -5,6 +5,10 @@ function addMarca(marca) {
     return mar.save();
 }
 
+function findExist(descripcion) {
+    return Model.findOne({descripcion: descripcion});
+}
+
 function getMarca() {
     return Model.find()
 }
@@ -19,5 +23,6 @@ function patchMarca(idMarca, marca) {
 module.exports = {
     add: addMarca,
 	get: getMarca,
-    patch: patchMarca
+    patch: patchMarca,
+    find: findExist,
 }

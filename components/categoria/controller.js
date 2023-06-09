@@ -10,6 +10,14 @@ function addCategoria(categoria) {
     return store.add(categoria);
 }
 
+function findExist(descripcion) {
+    if (!descripcion) {
+        return Promise.reject('Invalid user list');
+    } 
+
+    return store.find(descripcion);
+}
+
 function getCategoria() {
     return store.get();
 }
@@ -23,5 +31,6 @@ function patchCategoria(idCategoria, descripcion) {
 module.exports = {
     addCategoria,
     patchCategoria,
-    getCategoria
+    getCategoria,
+    findExist
 }

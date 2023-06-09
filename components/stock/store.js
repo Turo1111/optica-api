@@ -5,8 +5,36 @@ function addStock(stock) {
     return s.save();
 }
 
-function getStock() {
-    return Model.find()
+function getStock(idProducto) {
+    return Model.aggregate([
+        {
+            $match: {
+                idProducto: idProducto
+            }
+        },
+        {
+            $lookup: {
+             from: "sucursals",
+             localField:  "idSucursal" ,
+             foreignField: "_id",
+             as: "sucursal"
+            }
+        },
+        {
+            $project: {
+                cantidad: 1,
+                precioEfectivo: 1,
+                precioLista: 1,
+                sucursal: "$sucursal.descripcion",
+            }
+        },
+        {
+            $unwind: {
+                path: "$sucursal",
+                preserveNullAndEmptyArrays: true
+            }
+        }
+    ]);
 }
 
 function patchStock(idStock, stock) {
@@ -21,3 +49,18 @@ module.exports = {
 	get: getStock,
     patch: patchStock
 }
+
+			/* {
+                $lookup: {
+                 from: "sucursals",
+                 localField:  "idSucursal" ,
+                 foreignField: "_id",
+                 as: "sucursal"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$sucursal",
+                    preserveNullAndEmptyArrays: true
+                }
+            },  */

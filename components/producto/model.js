@@ -25,17 +25,21 @@ const mySchema = new Schema({
     ancho: {
         type: String,
     },
+    precioGeneral: {
+        type: Number,
+    },
     idCategoria : {
         type: Schema.ObjectId,
         ref: 'Categoria',
+        required: true,
     },
     idMarca : {
         type: Schema.ObjectId,
-        ref: 'Categoria',
+        ref: 'Marca',
     },
     idColor : {
         type: Schema.ObjectId,
-        ref: 'Categoria',
+        ref: 'Color',
     }
 });
 

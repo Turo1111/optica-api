@@ -14,6 +14,7 @@ const compra = require('../components/compra/network');
 const lineacompra = require('../components/lineaCompra/network');
 const color = require('../components/color/network');
 const marca = require('../components/marca/network');
+const roles = require('../components/roles/network');
 
 const routes = function (server) {
     server.use('/producto', producto);
@@ -22,7 +23,7 @@ const routes = function (server) {
     server.use('/stock', stock);
     server.use('/oferta', oferta);
     server.use('/empleado', empleado);
-    server.use('/obraSocial', obraSocial);
+    server.use('/obrasocial', obraSocial);
     server.use('/cliente', cliente);
     server.use('/senia', senia);
     server.use('/venta', venta);
@@ -32,6 +33,7 @@ const routes = function (server) {
     server.use('/lineacompra', lineacompra);
     server.use('/color', color);
     server.use('/marca', marca);
+    server.use('/roles', roles);
 }
 
 module.exports = routes;

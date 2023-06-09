@@ -13,9 +13,16 @@ const mySchema = new Schema({
     telefono: {
         type: String,
     },
+    direccion: {
+        type: String,
+    },
     idSucursal: {
         type: Schema.ObjectId,
         ref: 'Sucursal',
+    },
+    idRol: {
+        type: Schema.ObjectId,
+        ref: 'Rol',
     },
     estado: {
         type: Boolean,

@@ -6,7 +6,7 @@ const mySchema = new Schema({
     id: {
         type: Schema.ObjectId,
     },
-    nombre: {
+    descripcion: {
         type: String,
         required: true,
     },

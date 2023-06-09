@@ -5,9 +5,9 @@ const router = express.Router();
 const {emitSocket} = require('../../socket')
 
 router.post('/', function(req, res) {
-    controller.addVenta(req.body)
+    controller.addRol(req.body)
         .then(data => {
-            emitSocket('venta', {
+            emitSocket('roles', {
                 action: 'create',
                 res: data
             });
@@ -20,7 +20,7 @@ router.post('/', function(req, res) {
 });
 
 router.get('/', function(req, res) {
-    controller.getVenta()
+    controller.getRol()
         .then(data => {
             response.success(req, res, data, 200);
         })
@@ -29,10 +29,10 @@ router.get('/', function(req, res) {
         });
 });
 
-router.patch('/:idProducto', function(req, res) {
-    controller.patchVenta(req.params.idProducto, req.body)
+router.patch('/:idRol', function(req, res) {
+    controller.patchRol(req.params.idRol, req.body)
         .then(data => {
-            emitSocket('venta', {
+            emitSocket('roles', {
                 action: 'patch',
                 res: req.body
             });

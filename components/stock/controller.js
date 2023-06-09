@@ -14,8 +14,8 @@ function addStock(stock) {
     });
 }
 
-function getStock() {
-    return store.get();
+function getStock(idProducto) {
+    return store.get(new mongoose.Types.ObjectId(idProducto));
 }
 
 

@@ -4,6 +4,7 @@ const controller = require('./controller');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const {emitSocket} = require('../../socket')
 
 router.post('/', function(req, res) {
     controller.findExist(req.body.usuario)
@@ -11,6 +12,10 @@ router.post('/', function(req, res) {
             if(!empleado){
                 controller.addEmpleado(req.body)
                     .then(data => {
+                        emitSocket('empleado', {
+                            action: 'create',
+                            res: data
+                        });
                         return response.success(req, res, data, 200);
                     })
                     .catch(err => {
@@ -64,6 +69,10 @@ router.post('/login', function(req, res) {
 router.patch('/:idEmpleado', function(req, res) {
     controller.patchEmpleado(req.params.idEmpleado, req.body)
         .then(data => {
+            emitSocket('empleado', {
+                action: 'patch',
+                res: req.body
+            });
             response.success(req, res, data, 200);
         })
         .catch(err => {

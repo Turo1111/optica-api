@@ -1,23 +1,23 @@
 const Model = require('./model');
 
-function addCategoria(categoria) {
-    const cat = new Model(categoria);
-    return cat.save();
+function addSucursal(sucursal) {
+    const suc = new Model(sucursal);
+    return suc.save();
 }
 
-function getCategoria() {
+function getSucursal() {
     return Model.find()
 }
 
-function patchCategoria(idCategoria, descripcion) {
+function patchSucursal(idSucursal, sucursal) {
     return Model.updateOne(
-        {_id: idCategoria},
-        {$set: descripcion}
+        {_id: idSucursal},
+        {$set: sucursal}
     )
 }
 
 module.exports = {
-    add: addCategoria,
-	get: getCategoria,
-    patch: patchCategoria
+    add: addSucursal,
+	get: getSucursal,
+    patch: patchSucursal
 }

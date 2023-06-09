@@ -5,6 +5,10 @@ function addCategoria(categoria) {
     return cat.save();
 }
 
+function findExist(descripcion) {
+    return Model.findOne({descripcion: descripcion});
+}
+
 function getCategoria() {
     return Model.find()
 }
@@ -19,5 +23,6 @@ function patchCategoria(idCategoria, descripcion) {
 module.exports = {
     add: addCategoria,
 	get: getCategoria,
-    patch: patchCategoria
+    patch: patchCategoria,
+    find: findExist,
 }

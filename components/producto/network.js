@@ -4,10 +4,15 @@ const controller = require('./controller');
 const router = express.Router();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const {emitSocket} = require('../../socket')
 
 router.post('/', upload.single('imagen'), function(req, res) {
     controller.addProducto(req.body, req.file)
         .then(data => {
+            emitSocket('producto', {
+                action: 'create',
+                res: data
+            });
             return response.success(req, res, data, 200);
         })
         .catch(err => {
@@ -26,9 +31,13 @@ router.get('/', function(req, res) {
         });
 });
 
-router.patch('/:idProducto', function(req, res) {
-    controller.patchProducto(req.params.idProducto, req.body)
+router.patch('/:idProducto', upload.single('newimagen'), function(req, res) {
+    controller.patchProducto(req.params.idProducto, req.body, req.file)
         .then(data => {
+            emitSocket('producto', {
+                action: 'patch',
+                res: req.body
+            });
             response.success(req, res, data, 200);
         })
         .catch(err => {
