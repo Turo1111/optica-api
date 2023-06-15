@@ -2,7 +2,8 @@ const express = require('express');
 const response = require('../../network/response');
 const controller = require('./controller');
 const router = express.Router();
-const {emitSocket} = require('../../socket')
+const {emitSocket} = require('../../socket');
+const { isAuth } = require('../../isAuth');
 
 router.post('/', function(req, res) {
     controller.addSucursal(req.body)
@@ -20,13 +21,19 @@ router.post('/', function(req, res) {
 });
 
 router.get('/', function(req, res) {
-    controller.getSucursal()
+    try {
+        const decoded = isAuth(req.headers.authorization)
+        controller.getSucursal()
         .then(data => {
             response.success(req, res, data, 200);
         })
         .catch(err => {
             response.error(req, res, 'Internal error', 500, err);
         });
+    } catch (error) {
+        return response.error(req, res, 'Token Inválido', 401, error);
+    }
+    
 });
 
 router.patch('/:idSucursal', function(req, res) {

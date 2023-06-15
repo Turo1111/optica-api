@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const api = process.env.API_KEY;
 
-export function isAuth ( token ) {
-    const authHeader = token;
+function isAuth ( header ) {
+    const authHeader = header;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ message: 'Token de autorización faltante o en formato incorrecto' });
@@ -9,7 +11,11 @@ export function isAuth ( token ) {
 
     const token = authHeader.substring('Bearer '.length);
 
-    const decoded = jwt.verify(token, 'a5y9k88dfrt52bnm');
+    const decoded = jwt.verify(token, api);
 
     return decoded
+}
+
+module.exports = {
+  isAuth
 }

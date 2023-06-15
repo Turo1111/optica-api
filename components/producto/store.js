@@ -5,6 +5,10 @@ function addProducto(producto) {
     return product.save();
 }
 
+function findExist(codigo) {
+    return Model.findOne({codigo: codigo});
+}
+
 function getProducto() {
     return Model.aggregate(
 		[
@@ -78,5 +82,6 @@ function patchProducto(idProducto, producto) {
 module.exports = {
     add: addProducto,
 	get: getProducto,
-    patch: patchProducto
+    patch: patchProducto,
+    find: findExist
 }

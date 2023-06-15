@@ -7,18 +7,27 @@ const upload = multer({ dest: 'uploads/' });
 const {emitSocket} = require('../../socket')
 
 router.post('/', upload.single('imagen'), function(req, res) {
-    controller.addProducto(req.body, req.file)
-        .then(data => {
-            emitSocket('producto', {
-                action: 'create',
-                res: data
+    controller.findExist(req.body.codigo)
+    .then(producto=>{
+        if (!producto) {
+            controller.addProducto(req.body, req.file)
+            .then(data => {
+                emitSocket('producto', {
+                    action: 'create',
+                    res: data
+                });
+                return response.success(req, res, data, 200);
+            })
+            .catch(err => {
+                response.error(req, res, 'Internal error', 500, err); 
             });
-            return response.success(req, res, data, 200);
-        })
-        .catch(err => {
-            response.error(req, res, 'Internal error', 500, err); 
-        });
-    
+        }else{
+            response.error(req, res, 'Codigo ya existente', 500, err);
+        }
+    })
+    .catch(err=>{
+        response.error(req, res, 'Codigo ya existente', 500, err); 
+    })
 });
 
 router.get('/', function(req, res) {

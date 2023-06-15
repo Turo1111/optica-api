@@ -5,6 +5,8 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {emitSocket} = require('../../socket')
+require('dotenv').config();
+const api = process.env.API_KEY;
 
 router.post('/', function(req, res) {
     controller.findExist(req.body.usuario)
@@ -45,7 +47,8 @@ router.get('/', function(req, res) {
 router.post('/login', function(req, res) {
     controller.loginEmpleado(req.body.usuario, req.body.password)
         .then(data => {
-            if (! bcrypt.compareSync(req.body.password, data.password)) {
+            console.log("network",data)
+            if (! bcrypt.compareSync(req.body.password, data[0].password)) {
                 return res.status(400).json({
                     ok: false,
                     err: {
@@ -53,7 +56,7 @@ router.post('/login', function(req, res) {
                     }
                  })
             }else{
-                const token = jwt.sign({ usuario: data.usuario }, 'a5y9k88dfrt52bnm');
+                const token = jwt.sign({ usuario: data.usuario }, api);
                 return res.status(200).json({
                   ok: true,
                   token: token,

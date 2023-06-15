@@ -12,6 +12,7 @@ npm-debug.*
 web-build/
 bd
 DiagramaBD.drawio
+.env
 
 # macOS
 .DS_Store

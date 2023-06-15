@@ -42,6 +42,14 @@ function getProducto() {
     return store.get();
 }
 
+function findExist(codigo) {
+    if (!codigo) {
+        return Promise.reject('Invalid user list');
+    } 
+
+    return store.find(codigo);
+}
+
 
 function patchProducto(idProducto, producto, imagenFile) {
 
@@ -131,5 +139,6 @@ function deleteImage(filename) {
 module.exports = {
     addProducto,
     getProducto,
-    patchProducto
+    patchProducto,
+    findExist
 }

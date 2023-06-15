@@ -28,12 +28,19 @@ function getEmpleado() {
 }
 
 function loginEmpleado(usuario) {
+    if (!usuario) {
+        return Promise.reject('Invalid user');
+    }
     return store.login(usuario)
 }
 
 
 function patchEmpleado(idEmpleado, empleado) {
-    return store.patch(idEmpleado, empleado);
+
+    return store.patch(idEmpleado, {
+        ...empleado,
+        password: bcrypt.hashSync(empleado.password, 10)
+    });
 }
 
 

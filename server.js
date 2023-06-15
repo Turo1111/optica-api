@@ -4,6 +4,9 @@ const cors = require('cors');
 const db = require('./db');
 const {init} = require('./socket');
 const router = require('./network/routes');
+require('dotenv').config();
+const port = process.env.PORT;
+const dbUrl = process.env.DB_URL;
 
 const app = express();
 
@@ -19,11 +22,10 @@ const options = {
 app.use(cors(options));
 app.use(express.static('public'));
 
-db('mongodb+srv://turo:afwvf6gZ8ibxpWju@opticatest.kn9rafv.mongodb.net/?retryWrites=true&w=majority');
+db(dbUrl);
 app.use(bodyParser.json());
 router(app);
 
-const port = 3001;
 server.listen(port, () => {
 	console.log(`Listening on port ${port}...`);
 	const io = init(server);
