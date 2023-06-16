@@ -5,42 +5,57 @@ const router = express.Router();
 const {emitSocket} = require('../../socket')
 
 router.post('/', function(req, res) {
-    controller.addObraSocial(req.body)
-        .then(data => {
-            emitSocket('obraSocial', {
-                action: 'create',
-                res: data
+    try {
+        const decoded = isAuth(req.headers.authorization)
+        controller.addObraSocial(req.body)
+            .then(data => {
+                emitSocket('obraSocial', {
+                    action: 'create',
+                    res: data
+                });
+                return response.success(req, res, data, 200);
+            })
+            .catch(err => {
+                response.error(req, res, 'Internal error', 500, err); 
             });
-            return response.success(req, res, data, 200);
-        })
-        .catch(err => {
-            response.error(req, res, 'Internal error', 500, err); 
-        });
+    } catch (error) {
+        return response.error(req, res, 'Token Inválido', 401, error);
+    }
     
 });
 
 router.get('/', function(req, res) {
-    controller.getObraSocial()
-        .then(data => {
-            response.success(req, res, data, 200);
-        })
-        .catch(err => {
-            response.error(req, res, 'Internal error', 500, err);
-        });
+    try {
+        const decoded = isAuth(req.headers.authorization)
+        controller.getObraSocial()
+            .then(data => {
+                response.success(req, res, data, 200);
+            })
+            .catch(err => {
+                response.error(req, res, 'Internal error', 500, err);
+            });
+    } catch (error) {
+        return response.error(req, res, 'Token Inválido', 401, error);
+    }
 });
 
 router.patch('/:idObraSocial', function(req, res) {
-    controller.patchObraSocial(req.params.idObraSocial, req.body)
-        .then(data => {
-            emitSocket('obraSocial', {
-                action: 'patch',
-                res: req.body
+    try {
+        const decoded = isAuth(req.headers.authorization)
+        controller.patchObraSocial(req.params.idObraSocial, req.body)
+            .then(data => {
+                emitSocket('obraSocial', {
+                    action: 'patch',
+                    res: req.body
+                });
+                response.success(req, res, data, 200);
+            })
+            .catch(err => {
+                response.error(req, res, 'Internal error', 500, err);
             });
-            response.success(req, res, data, 200);
-        })
-        .catch(err => {
-            response.error(req, res, 'Internal error', 500, err);
-        });
+    } catch (error) {
+        return response.error(req, res, 'Token Inválido', 401, error);
+    }
 });
 
 module.exports = router;

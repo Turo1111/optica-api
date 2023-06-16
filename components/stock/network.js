@@ -5,42 +5,56 @@ const router = express.Router();
 const {emitSocket} = require('../../socket')
 
 router.post('/', function(req, res) {
-    controller.addStock(req.body)
-        .then(data => {
-            emitSocket('stock', {
-                action: 'create',
-                res: data
+    try {
+        const decoded = isAuth(req.headers.authorization)
+        controller.addStock(req.body)
+            .then(data => {
+                emitSocket('stock', {
+                    action: 'create',
+                    res: data
+                });
+                return response.success(req, res, data, 200);
+            })
+            .catch(err => {
+                response.error(req, res, 'Internal error', 500, err); 
             });
-            return response.success(req, res, data, 200);
-        })
-        .catch(err => {
-            response.error(req, res, 'Internal error', 500, err); 
-        });
-    
+    } catch (error) {
+        return response.error(req, res, 'Token Inválido', 401, error);
+    }
 });
 
 router.get('/:idProducto', function(req, res) {
-    controller.getStock(req.params.idProducto)
-        .then(data => {
-            response.success(req, res, data, 200);
-        })
-        .catch(err => {
-            response.error(req, res, 'Internal error', 500, err);
-        });
+    try {
+        const decoded = isAuth(req.headers.authorization)
+        controller.getStock(req.params.idProducto)
+            .then(data => {
+                response.success(req, res, data, 200);
+            })
+            .catch(err => {
+                response.error(req, res, 'Internal error', 500, err);
+            });
+    } catch (error) {
+        return response.error(req, res, 'Token Inválido', 401, error);
+    }
 });
 
 router.patch('/:idStock', function(req, res) {
-    controller.patchStock(req.params.idStock, req.body)
-        .then(data => {
-            emitSocket('stock', {
-                action: 'patch',
-                res: req.body
+    try {
+        const decoded = isAuth(req.headers.authorization)
+        controller.patchStock(req.params.idStock, req.body)
+            .then(data => {
+                emitSocket('stock', {
+                    action: 'patch',
+                    res: req.body
+                });
+                response.success(req, res, data, 200);
+            })
+            .catch(err => {
+                response.error(req, res, 'Internal error', 500, err);
             });
-            response.success(req, res, data, 200);
-        })
-        .catch(err => {
-            response.error(req, res, 'Internal error', 500, err);
-        });
+    } catch (error) {
+        return response.error(req, res, 'Token Inválido', 401, error);
+    }
 });
 
 module.exports = router;

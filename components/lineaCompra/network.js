@@ -5,42 +5,57 @@ const router = express.Router();
 const {emitSocket} = require('../../socket')
 
 router.post('/', function(req, res) {
-    controller.addLineaCompra(req.body)
-        .then(data => {
-            emitSocket('lineaCompra', {
-                action: 'create',
-                res: data
+    try {
+        const decoded = isAuth(req.headers.authorization)
+        controller.addLineaCompra(req.body)
+            .then(data => {
+                emitSocket('lineaCompra', {
+                    action: 'create',
+                    res: data
+                });
+                return response.success(req, res, data, 200);
+            })
+            .catch(err => {
+                response.error(req, res, 'Internal error', 500, err); 
             });
-            return response.success(req, res, data, 200);
-        })
-        .catch(err => {
-            response.error(req, res, 'Internal error', 500, err); 
-        });
+    } catch (error) {
+        return response.error(req, res, 'Token Inválido', 401, error);
+    }
     
 });
 
 router.get('/', function(req, res) {
-    controller.getLineaCompra()
-        .then(data => {
-            response.success(req, res, data, 200);
-        })
-        .catch(err => {
-            response.error(req, res, 'Internal error', 500, err);
-        });
+    try {
+        const decoded = isAuth(req.headers.authorization)
+        controller.getLineaCompra()
+            .then(data => {
+                response.success(req, res, data, 200);
+            })
+            .catch(err => {
+                response.error(req, res, 'Internal error', 500, err);
+            });
+    } catch (error) {
+        return response.error(req, res, 'Token Inválido', 401, error);
+    }
 });
 
 router.patch('/:idLineaCompra', function(req, res) {
-    controller.patchLineaCompra(req.params.idLineaCompra, req.body)
-        .then(data => {
-            emitSocket('lineaCompra', {
-                action: 'create',
-                res: req.body
+    try {
+        const decoded = isAuth(req.headers.authorization)
+        controller.patchLineaCompra(req.params.idLineaCompra, req.body)
+            .then(data => {
+                emitSocket('lineaCompra', {
+                    action: 'create',
+                    res: req.body
+                });
+                response.success(req, res, data, 200);
+            })
+            .catch(err => {
+                response.error(req, res, 'Internal error', 500, err);
             });
-            response.success(req, res, data, 200);
-        })
-        .catch(err => {
-            response.error(req, res, 'Internal error', 500, err);
-        });
+    } catch (error) {
+        return response.error(req, res, 'Token Inválido', 401, error);
+    }
 });
 
 module.exports = router;

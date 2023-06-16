@@ -6,7 +6,9 @@ const {emitSocket} = require('../../socket');
 const { isAuth } = require('../../isAuth');
 
 router.post('/', function(req, res) {
-    controller.addSucursal(req.body)
+    try {
+        const decoded = isAuth(req.headers.authorization)
+        controller.addSucursal(req.body)
         .then(data => {
             emitSocket('sucursal', {
                 action: 'create',
@@ -17,7 +19,9 @@ router.post('/', function(req, res) {
         .catch(err => {
             response.error(req, res, 'Internal error', 500, err); 
         });
-    
+    } catch (error) {
+        return response.error(req, res, 'Token Inválido', 401, error);
+    }
 });
 
 router.get('/', function(req, res) {
@@ -37,7 +41,9 @@ router.get('/', function(req, res) {
 });
 
 router.patch('/:idSucursal', function(req, res) {
-    controller.patchSucursal(req.params.idSucursal, req.body)
+    try {
+        const decoded = isAuth(req.headers.authorization)
+        controller.patchSucursal(req.params.idSucursal, req.body)
         .then(data => {
             emitSocket('sucursal', {
                 action: 'patch',
@@ -48,6 +54,10 @@ router.patch('/:idSucursal', function(req, res) {
         .catch(err => {
             response.error(req, res, 'Internal error', 500, err);
         });
+    } catch (error) {
+        return response.error(req, res, 'Token Inválido', 401, error);
+    }
+    
 });
 
 module.exports = router;
