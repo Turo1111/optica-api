@@ -4,6 +4,7 @@ const controller = require('./controller');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const {emitSocket} = require('../../socket')
+const { isAuth } = require('../../isAuth');
 
 router.post('/', function(req, res) {
     try {

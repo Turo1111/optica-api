@@ -3,6 +3,7 @@ const response = require('../../network/response');
 const controller = require('./controller');
 const router = express.Router();
 const {emitSocket} = require('../../socket')
+const { isAuth } = require('../../isAuth');
 
 router.post('/', function(req, res) {
     try {

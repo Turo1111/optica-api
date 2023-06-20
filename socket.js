@@ -63,6 +63,7 @@ const mySchema = new Schema({
 const Model = mongoose.model('Registro', mySchema);
 
 function addReg(reg) {
+	console.log(reg)
     const r = new Model(reg);
     return r.save();
 }

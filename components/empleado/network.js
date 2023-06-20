@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const {emitSocket} = require('../../socket')
 require('dotenv').config();
 const api = process.env.API_KEY;
+const { isAuth } = require('../../isAuth');
 
 router.post('/', function(req, res) {
     try {

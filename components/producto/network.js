@@ -5,6 +5,7 @@ const router = express.Router();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const {emitSocket} = require('../../socket')
+const { isAuth } = require('../../isAuth');
 
 router.post('/', upload.single('imagen'), function(req, res) {
     try {
@@ -37,6 +38,7 @@ router.post('/', upload.single('imagen'), function(req, res) {
 
 router.get('/', function(req, res) {
     try {
+        console.log(req.headers.authorization)
         const decoded = isAuth(req.headers.authorization)
         controller.getProducto()
             .then(data => {
