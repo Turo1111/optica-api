@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 function addSenia(senia) {
     if (!senia) {
-        return Promise.reject('Invalid user list');
+        return Promise.reject('[add] Invalid user list');
     } 
 
     return store.add({...senia, idCliente: new mongoose.Types.ObjectId(senia.idCliente)});
@@ -12,7 +12,7 @@ function addSenia(senia) {
 
 function findExist(idCliente) {
     if (!idCliente) {
-        return Promise.reject('Invalid user list');
+        return Promise.reject('[find] Invalid user list');
     } 
 
     return store.find(idCliente);

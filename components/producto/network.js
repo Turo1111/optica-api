@@ -38,7 +38,6 @@ router.post('/', upload.single('imagen'), function(req, res) {
 
 router.get('/', function(req, res) {
     try {
-        console.log(req.headers.authorization)
         const decoded = isAuth(req.headers.authorization)
         controller.getProducto()
             .then(data => {

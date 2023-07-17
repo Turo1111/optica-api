@@ -10,7 +10,32 @@ function findExist(dni) {
 }
 
 function getCliente() {
-    return Model.find()
+    return Model.aggregate(
+		[
+			{
+                $lookup: {
+                 from: "senias",
+                 localField:  "_id" ,
+                 foreignField: "idCliente",
+                 as: "senia"
+                }
+            },
+            {
+                $project: {
+                    nombreCompleto: 1,
+                    telefono: 1,
+                    dni: 1,
+                    senia: { $ifNull: ["$senia.saldo", null] }
+                }
+            },
+            {
+                $unwind: {
+                    path: "$senia",
+                    preserveNullAndEmptyArrays: true
+                }
+            }
+		]
+	)
 }
 
 function patchCliente(idCliente, cliente) {

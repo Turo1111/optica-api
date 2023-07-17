@@ -27,7 +27,7 @@ function emitSocket(type, params) {
 		addReg({
 			coleccion: type,
 			accion: params.action,
-			idColeccion: params.data._id,
+			idColeccion: params.res._id,
 			fechaHora: fechaHora
 		})
 		getIO().emit(type, params);

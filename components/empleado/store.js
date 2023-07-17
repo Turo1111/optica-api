@@ -83,12 +83,20 @@ function loginEmpleado(usuario) {
                 usuario: 1,
                 password: 1,
                 sucursal: "$sucursal.descripcion",
+                idSucursal: "$sucursal._id",
+                _id: 1,
                 roles: "$rol",
             }
         },
         {
             $unwind: {
                 path: "$sucursal",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $unwind: {
+                path: "$idSucursal",
                 preserveNullAndEmptyArrays: true
             }
         },
