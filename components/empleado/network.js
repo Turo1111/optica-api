@@ -56,7 +56,7 @@ router.get('/', function(req, res) {
 });
 
 router.post('/login', function(req, res) {
-
+    console.log(req.body.usuario, req.body.password)
     controller.loginEmpleado(req.body.usuario, req.body.password)
         .then(data => {
             if (! bcrypt.compareSync(req.body.password, data[0].password)) {
