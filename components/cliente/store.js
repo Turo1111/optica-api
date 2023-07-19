@@ -25,7 +25,7 @@ function getCliente() {
                     nombreCompleto: 1,
                     telefono: 1,
                     dni: 1,
-                    senia: { $ifNull: ["$senia.saldo", null] }
+                    senia: { $ifNull: ["$senia", null] }
                 }
             },
             {
