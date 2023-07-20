@@ -86,6 +86,7 @@ function loginEmpleado(usuario) {
                 idSucursal: "$sucursal._id",
                 _id: 1,
                 roles: "$rol",
+                estado: 1,
             }
         },
         {
