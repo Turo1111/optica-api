@@ -37,10 +37,15 @@ function loginEmpleado(usuario) {
 
 function patchEmpleado(idEmpleado, empleado) {
 
-    return store.patch(idEmpleado, {
-        ...empleado,
-        password: bcrypt.hashSync(empleado.password, 10)
-    });
+    const editEmpleado =  {
+        ...empleado
+    }
+
+    if (empleado.password) {
+        editEmpleado.password = bcrypt.hashSync(empleado.password, 10);
+      }
+
+    return store.patch(idEmpleado, editEmpleado);
 }
 
 

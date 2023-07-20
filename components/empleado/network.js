@@ -82,10 +82,8 @@ router.post('/login', function(req, res) {
 router.patch('/:idEmpleado', function(req, res) {
     try {
         const decoded = isAuth(req.headers.authorization)
-        console.log("editar empleado",req.params.idEmpleado, req.body)
         controller.patchEmpleado(req.params.idEmpleado, req.body)
             .then(data => {
-                console.log("data", data)
                 emitSocket('empleado', {
                     action: 'patch',
                     res: req.body
