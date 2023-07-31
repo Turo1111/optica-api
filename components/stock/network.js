@@ -8,17 +8,26 @@ const { isAuth } = require('../../isAuth');
 router.post('/', function(req, res) {
     try {
         const decoded = isAuth(req.headers.authorization)
-        controller.addStock(req.body)
-            .then(data => {
-                emitSocket('stock', {
-                    action: 'create',
-                    res: data
+        controller.findExist(req.body.idSucursal, req.body.idProducto)
+        .then(stock=>{
+            if (!stock) {
+                controller.addStock(req.body)
+                .then(data => {
+                    emitSocket('stock', {
+                        action: 'create',
+                        res: data
+                    });
+                    return response.success(req, res, data, 200);
+                })
+                .catch(err => {
+                    response.error(req, res, 'Internal error', 500, err); 
                 });
-                return response.success(req, res, data, 200);
-            })
-            .catch(err => {
-                response.error(req, res, 'Internal error', 500, err); 
-            });
+            }else{
+                response.error(req, res, 'Stock ya existente', 500, {});
+            }
+            
+        })
+        
     } catch (error) {
         return response.error(req, res, 'Token Inválido', 401, error);
     }

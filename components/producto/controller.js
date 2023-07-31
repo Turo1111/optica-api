@@ -23,18 +23,22 @@ function addProducto(producto, imagenFile) {
 
     const productoData = {
         ...producto,
-        idCategoria: new mongoose.Types.ObjectId(producto.categoria),
+        idCategoria: new mongoose.Types.ObjectId(producto.idCategoria),
         imagen: imagenPath,
     };
 
-    if (producto.marca) {
-        productoData.idMarca = new mongoose.Types.ObjectId(producto.marca);
-      }
-      
-      if (producto.color) {
-        productoData.idColor = new mongoose.Types.ObjectId(producto.color);
-      }
-
+    if (producto.idMarca !== '') {
+      productoData.idMarca = new mongoose.Types.ObjectId(producto.idMarca);
+    }else{
+        delete productoData.idMarca
+    }
+    
+    if (producto.idColor !== '') {
+      productoData.idColor = new mongoose.Types.ObjectId(producto.idColor);
+    }else{
+        delete productoData.idColor
+    }
+    
     return store.add(productoData);
 }
 

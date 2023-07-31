@@ -6,7 +6,26 @@ function addRol(rol) {
 }
 
 function getRol() {
-    return Model.find()
+    return Model.aggregate(
+		[
+            {
+                $lookup: {
+                 from: "empleados",
+                 localField:  "_id" ,
+                 foreignField: "idRol",
+                 as: "empleados"
+                }
+            },
+            {
+              $project: {
+                _id: 1,
+                descripcion: 1,
+                permisos: 1,
+                totalEmpleados: { $size: '$empleados' },
+              },
+            }
+		]
+	)
 }
 
 function patchRol(idRol, rol) {

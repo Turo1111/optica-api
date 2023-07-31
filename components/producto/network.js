@@ -17,7 +17,12 @@ router.post('/', upload.single('imagen'), function(req, res) {
                 .then(data => {
                     emitSocket('producto', {
                         action: 'create',
-                        res: data
+                        res: {
+                            ...data._doc,
+                            categoria: req.body.categoria,
+                            marca: req.body.marca,
+                            color: req.body.color,
+                        }
                     });
                     return response.success(req, res, data, 200);
                 })
@@ -54,6 +59,7 @@ router.get('/', function(req, res) {
 router.patch('/:idProducto', upload.single('newimagen'), function(req, res) {
     try {
         const decoded = isAuth(req.headers.authorization)
+        console.log(req.body)
         controller.patchProducto(req.params.idProducto, req.body, req.file)
             .then(data => {
                 emitSocket('producto', {

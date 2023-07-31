@@ -5,6 +5,13 @@ function addStock(stock) {
     return s.save();
 }
 
+function findExist(idSucursal, idProducto) {
+    return Model.findOne({
+        idSucursal: idSucursal,
+        idProducto: idProducto
+    });
+}
+
 function getStock(idProducto) {
     return Model.aggregate([
         {
@@ -26,6 +33,8 @@ function getStock(idProducto) {
                 precioEfectivo: 1,
                 precioLista: 1,
                 sucursal: "$sucursal.descripcion",
+                idProducto: 1,
+                idSucursal: 1
             }
         },
         {
@@ -47,7 +56,9 @@ function patchStock(idStock, stock) {
 module.exports = {
     add: addStock,
 	get: getStock,
-    patch: patchStock
+    patch: patchStock,
+    find: findExist
+
 }
 
 			/* {

@@ -10,14 +10,6 @@ const mySchema = new Schema({
         type: Date,
         required: true,
     },
-    armazon: {
-        type: Number,
-        required: true,
-    },
-    lente: {
-        type: Number,
-        required: true,
-    },
     observacion: {
         type: String,
     },

@@ -14,6 +14,14 @@ function addStock(stock) {
     });
 }
 
+function findExist(idSucursal, idProducto) {
+    if (!idSucursal && !idProducto) {
+        return Promise.reject('Invalid user list');
+    } 
+
+    return store.find(idSucursal, idProducto);
+}
+
 function getStock(idProducto) {
     return store.get(new mongoose.Types.ObjectId(idProducto));
 }
@@ -27,5 +35,6 @@ function patchStock(idStock, stock) {
 module.exports = {
     addStock,
     getStock,
-    patchStock
+    patchStock,
+    findExist
 }

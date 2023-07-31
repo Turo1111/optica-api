@@ -19,7 +19,10 @@ router.post('/', function(req, res) {
                         .then(data => {
                             emitSocket('empleado', {
                                 action: 'create',
-                                res: data
+                                res: {
+                                    ...data._doc,
+                                    sucursal: req.body.sucursal
+                                }
                             });
                             return response.success(req, res, data, 200);
                         })
@@ -82,6 +85,7 @@ router.post('/login', function(req, res) {
 router.patch('/:idEmpleado', function(req, res) {
     try {
         const decoded = isAuth(req.headers.authorization)
+        console.log(req.body)
         controller.patchEmpleado(req.params.idEmpleado, req.body)
             .then(data => {
                 emitSocket('empleado', {
