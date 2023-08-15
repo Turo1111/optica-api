@@ -7,55 +7,79 @@ const { isAuth } = require('../../isAuth');
 
 router.post('/', function(req, res) {
     try {
-        const decoded = isAuth(req.headers.authorization)
-        controller.addLineaCompra(req.body)
-            .then(data => {
-                emitSocket('lineaCompra', {
-                    action: 'create',
-                    res: data
+        isAuth(req.headers.authorization)
+            .then(decoded => {
+                if (decoded.error) {
+                    return response.error(req, res, decoded.error, 401);
+                }
+                controller.addLineaCompra(req.body)
+                .then(data => {
+                    emitSocket('lineaCompra', {
+                        action: 'create',
+                        res: data
+                    });
+                    return response.success(req, res, data, 200);
+                })
+                .catch(err => {
+                    response.error(req, res, 'Internal error', 500, err); 
                 });
-                return response.success(req, res, data, 200);
             })
-            .catch(err => {
-                response.error(req, res, 'Internal error', 500, err); 
+            .catch(error => {
+                return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
             });
     } catch (error) {
-        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
+        return response.error(req, res, 'Error en el servidor', 500, error);
     }
     
 });
 
 router.get('/', function(req, res) {
     try {
-        const decoded = isAuth(req.headers.authorization)
-        controller.getLineaCompra()
-            .then(data => {
-                response.success(req, res, data, 200);
+        isAuth(req.headers.authorization)
+            .then(decoded => {
+                if (decoded.error) {
+                    return response.error(req, res, decoded.error, 401);
+                }
+                controller.getLineaCompra()
+                .then(data => {
+                    response.success(req, res, data, 200);
+                })
+                .catch(err => {
+                    response.error(req, res, 'Internal error', 500, err);
+                });
             })
-            .catch(err => {
-                response.error(req, res, 'Internal error', 500, err);
+            .catch(error => {
+                return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
             });
     } catch (error) {
-        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
+        return response.error(req, res, 'Error en el servidor', 500, error);
     }
 });
 
 router.patch('/:idLineaCompra', function(req, res) {
     try {
-        const decoded = isAuth(req.headers.authorization)
-        controller.patchLineaCompra(req.params.idLineaCompra, req.body)
-            .then(data => {
-                emitSocket('lineaCompra', {
-                    action: 'create',
-                    res: req.body
+        isAuth(req.headers.authorization)
+            .then(decoded => {
+                if (decoded.error) {
+                    return response.error(req, res, decoded.error, 401);
+                }
+                controller.patchLineaCompra(req.params.idLineaCompra, req.body)
+                .then(data => {
+                    emitSocket('lineaCompra', {
+                        action: 'create',
+                        res: req.body
+                    });
+                    response.success(req, res, data, 200);
+                })
+                .catch(err => {
+                    response.error(req, res, 'Internal error', 500, err);
                 });
-                response.success(req, res, data, 200);
             })
-            .catch(err => {
-                response.error(req, res, 'Internal error', 500, err);
+            .catch(error => {
+                return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
             });
     } catch (error) {
-        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
+        return response.error(req, res, 'Error en el servidor', 500, error);
     }
 });
 
