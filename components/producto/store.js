@@ -37,6 +37,14 @@ function getProducto() {
                 }
             },
             {
+                $lookup: {
+                    from: "obrasocials",
+                    localField: "_id",
+                    foreignField: "productosDescuento",
+                    as: "obrasSocialesDescuento"
+                }
+            },
+            {
                 $project: {
                     descripcion: 1,
                     codigo: 1,
@@ -47,7 +55,8 @@ function getProducto() {
                     precioGeneral: 1,
                     marca: { $ifNull: ["$marca.descripcion", null] },
                     categoria: "$categoria.descripcion",
-                    color: { $ifNull: ["$color.descripcion", null] }
+                    color: { $ifNull: ["$color.descripcion", null] },
+                    obrasSocialesDescuento: "$obrasSocialesDescuento.descripcion"
                 }
             },
             {
@@ -67,12 +76,23 @@ function getProducto() {
                     path: "$color",
                     preserveNullAndEmptyArrays: true
                 }
-            } /* */
+            },/* */
 		]
 	)
 }
-
-function getProducto() {
+/* obrasSocialesDescuento: {
+    $filter: {
+        input: "$obrasSocialesDescuento",
+        as: "obraSocial",
+        cond: {
+            $gt: [
+                { $size: { $setIntersection: ["$productosDescuento", "$$obraSocial.productosDescuento"] } },
+                0
+            ]
+        }
+    }
+} */
+/* function getProducto() {
     return Model.aggregate(
 		[
 			{
@@ -130,10 +150,10 @@ function getProducto() {
                     path: "$color",
                     preserveNullAndEmptyArrays: true
                 }
-            } /* */
+            } 
 		]
 	)
-}
+} */
 
 function patchProducto(idProducto, producto) {
     return Model.updateOne(

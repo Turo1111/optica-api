@@ -24,7 +24,7 @@ function getVenta() {
                  as: "empleado"
                 }
             },
-{
+            {
                 $lookup: {
                  from: "ordens",
                  localField:  "idOrden" ,
@@ -41,15 +41,11 @@ function getVenta() {
                 }
             },
             {
-                $project: {
-                    fecha: 1,
-                    observacion: 1,
-                    tipoPago: 1,
-                    total: 1,
-                    cliente: 1,
-                    empleado: 1,
-                    sucursal: 1,
-                    orden: { $ifNull: ["$orden", null] }
+                $lookup: {
+                 from: "lineaventas",
+                 localField:  "_id" ,
+                 foreignField: "idVenta",
+                 as: "cantidadProductos"
                 }
             },
             {
@@ -74,6 +70,37 @@ function getVenta() {
                 $unwind: {
                     path: "$orden",
                     preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "obrasocials",
+                    localField: "orden.idObraSocial",
+                    foreignField: "_id",
+                    as: "obraSocial"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$obraSocial",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $project: {
+                    fecha: 1,
+                    observacion: 1,
+                    tipoPago: 1,
+                    total: 1,
+                    cliente: "$cliente.nombreCompleto",
+                    empleado: "$empleado.nombreCompleto",
+                    sucursal: "$sucursal.descripcion",
+                    descuento: 1,
+                    subTotal: 1,
+                    dineroIngresado: { $ifNull: ["$dineroIngresado", null] },
+                    orden: { $ifNull: ["$orden", null] },
+                    cantidadProductos: { $size: '$cantidadProductos' },
+                    obraSocialDescripcion: "$obraSocial.descripcion"
                 }
             }  /* */
 		]

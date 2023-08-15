@@ -37,7 +37,7 @@ router.post('/', function(req, res) {
                 response.error(req, res, 'Usuario ya existente', 500, err); 
             })
     } catch (error) {
-        return response.error(req, res, 'Token Inválido', 401, error);
+        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
     }
     
     
@@ -54,7 +54,7 @@ router.get('/', function(req, res) {
                 response.error(req, res, 'Internal error', 500, err);
             });
     } catch (error) {
-        return response.error(req, res, 'Token Inválido', 401, error);
+        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
     }
 });
 
@@ -85,7 +85,6 @@ router.post('/login', function(req, res) {
 router.patch('/:idEmpleado', function(req, res) {
     try {
         const decoded = isAuth(req.headers.authorization)
-        console.log(req.body)
         controller.patchEmpleado(req.params.idEmpleado, req.body)
             .then(data => {
                 emitSocket('empleado', {
@@ -98,7 +97,7 @@ router.patch('/:idEmpleado', function(req, res) {
                 response.error(req, res, 'Internal error', 500, err);
             });
     } catch (error) {
-        return response.error(req, res, 'Token Inválido', 401, error);
+        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
     }
 });
 

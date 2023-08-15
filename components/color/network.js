@@ -31,7 +31,7 @@ router.post('/', function(req, res) {
             response.error(req, res, 'Color ya existente', 500, err); 
         })
     } catch (error) {
-        return response.error(req, res, 'Token Inválido', 401, error);
+        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
     }
 });
 
@@ -46,7 +46,7 @@ router.get('/', function(req, res) {
                 response.error(req, res, 'Internal error', 500, err);
             });
     } catch (error) {
-        return response.error(req, res, 'Token Inválido', 401, error);
+        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
     }
 });
 
@@ -65,7 +65,7 @@ router.patch('/:idColor', function(req, res) {
                 response.error(req, res, 'Internal error', 500, err);
             });
     } catch (error) {
-        return response.error(req, res, 'Token Inválido', 401, error);
+        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
     }
 });
 

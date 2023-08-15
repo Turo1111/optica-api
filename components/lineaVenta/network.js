@@ -20,15 +20,15 @@ router.post('/', function(req, res) {
                 response.error(req, res, 'Internal error', 500, err); 
             });
     } catch (error) {
-        return response.error(req, res, 'Token Inválido', 401, error);
+        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
     }
     
 });
 
-router.get('/', function(req, res) {
+router.get('/:idVenta', function(req, res) {
     try {
         const decoded = isAuth(req.headers.authorization)
-        controller.getLineaVenta()
+        controller.getLineaVenta(req.params.idVenta)
             .then(data => {
                 response.success(req, res, data, 200);
             })
@@ -36,7 +36,7 @@ router.get('/', function(req, res) {
                 response.error(req, res, 'Internal error', 500, err);
             });
     } catch (error) {
-        return response.error(req, res, 'Token Inválido', 401, error);
+        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
     }
 });
 
@@ -55,7 +55,7 @@ router.patch('/:idLineaVenta', function(req, res) {
                 response.error(req, res, 'Internal error', 500, err);
             });
     } catch (error) {
-        return response.error(req, res, 'Token Inválido', 401, error);
+        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
     }
 });
 

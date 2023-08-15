@@ -5,12 +5,18 @@ function addOferta(oferta) {
     return ofer.save();
 }
 
-function findExist(idProducto) {
-    return Model.findOne({idProducto: idProducto});
+function findExist(idProducto, fechaInicio, fechaFinal) {
+    return Model.findOne({
+        idProducto: idProducto,
+        $or: [
+            { fechaInicio: { $lte: fechaInicio }, fechaFinal: { $gte: fechaInicio } },
+            { fechaInicio: { $lte: fechaFinal }, fechaFinal: { $gte: fechaFinal } }
+        ]
+    });
 }
 
-function getOferta() {
-    return Model.find()
+function getOferta(idProducto) {
+    return Model.find({idProducto: idProducto})
 }
 
 function patchOferta(idOferta, oferta) {

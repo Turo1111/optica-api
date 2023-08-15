@@ -10,17 +10,16 @@ const mySchema = new Schema({
         type: Number,
         required: true,
     },
-    desde: {
+    fechaInicio: {
         type: Date,
         required: true,
     },
-    hasta: {
+    fechaFinal: {
         type: Date,
         required: true,
     },
-    estado: {
-        type: Boolean,
-        required: true
+    sucursales: {
+        type: Array,
     },
     idProducto: {
         type: Schema.ObjectId,

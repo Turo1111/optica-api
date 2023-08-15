@@ -13,8 +13,6 @@ function isAuth ( header ) {
 
     const decoded = jwt.verify(token, api);
 
-    console.log(decoded)
-
     return decoded
 }
 

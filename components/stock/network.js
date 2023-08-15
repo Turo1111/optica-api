@@ -29,7 +29,7 @@ router.post('/', function(req, res) {
         })
         
     } catch (error) {
-        return response.error(req, res, 'Token Inválido', 401, error);
+        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
     }
 });
 
@@ -44,7 +44,7 @@ router.get('/:idProducto', function(req, res) {
                 response.error(req, res, 'Internal error', 500, err);
             });
     } catch (error) {
-        return response.error(req, res, 'Token Inválido', 401, error);
+        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
     }
 });
 
@@ -63,7 +63,7 @@ router.patch('/:idStock', function(req, res) {
                 response.error(req, res, 'Internal error', 500, err);
             });
     } catch (error) {
-        return response.error(req, res, 'Token Inválido', 401, error);
+        return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
     }
 });
 

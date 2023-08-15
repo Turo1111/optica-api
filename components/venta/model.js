@@ -10,9 +10,19 @@ const mySchema = new Schema({
         type: Date,
         required: true,
     },
+    descuento: {
+        type: Number,
+    },
+    subTotal: {
+        type: Number,
+        required: true,
+    },
     total: {
         type: Number,
         required: true,
+    },
+    dineroIngresado: {
+        type: Number,
     },
     observacion: {
         type: String,

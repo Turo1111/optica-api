@@ -15,6 +15,7 @@ const lineacompra = require('../components/lineaCompra/network');
 const color = require('../components/color/network');
 const marca = require('../components/marca/network');
 const roles = require('../components/roles/network');
+const reg = require('../components/registros/network');
 
 const routes = function (server) {
     server.use('/producto', producto);
@@ -34,6 +35,7 @@ const routes = function (server) {
     server.use('/color', color);
     server.use('/marca', marca);
     server.use('/roles', roles);
+    server.use('/reg', reg);
 }
 
 module.exports = routes;

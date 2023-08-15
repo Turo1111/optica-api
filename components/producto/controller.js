@@ -11,14 +11,11 @@ function addProducto(producto, imagenFile) {
         return Promise.reject('Invalid user list');
     } 
 
-    console.log("Imagen file",imagenFile)
-
     let imagenPath = '';
 
     if (imagenFile) {
         // Guardar la imagen en el servidor
         imagenPath = saveImages(imagenFile);
-        console.log("Imagen path",imagenPath)
     }
 
     const productoData = {
@@ -61,14 +58,10 @@ function patchProducto(idProducto, producto, imagenFile) {
         deleteImage(producto.imagen)
     }
 
-    console.log("Imagen file",imagenFile)
-
     let imagenPath = '';
-
     if (imagenFile) {
         // Guardar la imagen en el servidor
         imagenPath = saveImages(imagenFile);
-        console.log("Imagen path",imagenPath)
     }
 
     const productoData = {
@@ -93,6 +86,8 @@ function patchProducto(idProducto, producto, imagenFile) {
             productoData.idColor = new mongoose.Types.ObjectId(producto.color);
         }
     }
+    
+    console.log("producto", productoData);
 
     return store.patch(idProducto, productoData);
 }

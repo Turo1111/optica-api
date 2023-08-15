@@ -14,8 +14,8 @@ function addLineaVenta(lineaVenta) {
     });
 }
 
-function getLineaVenta() {
-    return store.get();
+function getLineaVenta(idVenta) {
+    return store.get(new mongoose.Types.ObjectId(idVenta));
 }
 
 
