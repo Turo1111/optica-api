@@ -19,7 +19,10 @@ router.post('/', function(req, res) {
                         .then(data => {
                             emitSocket('stock', {
                                 action: 'create',
-                                res: data
+                                res: {
+                                    ...data._doc,
+                                    sucursal: req.body.sucursal
+                                }
                             });
                             return response.success(req, res, data, 200);
                         })
