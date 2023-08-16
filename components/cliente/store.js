@@ -18,6 +18,24 @@ function getCliente() {
                 foreignField: "idCliente",
                 as: "senia"
             }
+        },{
+            $addFields: {
+                senia: {
+                    $filter: {
+                        input: "$senia",
+                        as: "seniaItem",
+                        cond: { $eq: ["$$seniaItem.estado", true] }
+                    }
+                }
+            }
+        },
+        {
+            $match: {
+                $or: [
+                    { "senia": { $size: 0 } }, // Si no hay señas
+                    { "senia.estado": true } // Si hay señas con estado true
+                ]
+            }
         },
         {
             $lookup: {

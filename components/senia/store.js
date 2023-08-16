@@ -6,11 +6,11 @@ function addSenia(senia) {
 }
 
 function findExist(idCliente) {
-    return Model.findOne({idCliente: idCliente});
+    return Model.find({idCliente: idCliente});
 }
 
-function getSenia() {
-    return Model.find()
+function getSenia(idCliente) {
+    return Model.find({idCliente: idCliente})
 }
 
 function patchSenia(idSenia, senia) {

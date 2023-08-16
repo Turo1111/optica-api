@@ -14,7 +14,7 @@ router.post('/', function(req, res) {
                 }
                 controller.findExist(req.body.idCliente)
                 .then(senia=>{
-                    if(!senia){
+                    if(!senia.find(itemSenia=>itemSenia.estado === true)){
                         controller.addSenia(req.body)
                             .then(data => {
                                 emitSocket('senia', {
@@ -42,15 +42,16 @@ router.post('/', function(req, res) {
     }
 });
 
-router.get('/', function(req, res) {
+router.get('/:idCliente', function(req, res) {
     try {
         isAuth(req.headers.authorization)
             .then(decoded => {
                 if (decoded.error) {
                     return response.error(req, res, decoded.error, 401);
                 }
-                controller.getSenia()
+                controller.getSenia(req.params.idCliente)
                 .then(data => {
+                    console.log(data);
                     response.success(req, res, data, 200);
                 })
                 .catch(err => {

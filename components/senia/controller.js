@@ -18,8 +18,8 @@ function findExist(idCliente) {
     return store.find(idCliente);
 }
 
-function getSenia() {
-    return store.get();
+function getSenia(idCliente) {
+    return store.get(new mongoose.Types.ObjectId(idCliente));
 }
 
 
