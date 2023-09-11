@@ -20,6 +20,8 @@ function findExist(usuario) {
         return Promise.reject('Invalid user list');
     } 
 
+    console.log(store.find(usuario));
+
     return store.find(usuario);
 }
 
