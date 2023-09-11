@@ -6,7 +6,6 @@ function addEmpleado(empleado) {
 }
 
 function findExist(usuario) {
-    console.log('store', usuario);
     return Model.findOne({usuario: usuario});
 }
 
