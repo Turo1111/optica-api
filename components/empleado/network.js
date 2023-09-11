@@ -97,6 +97,7 @@ router.post('/login', function(req, res) {
             }
         })
         .catch(err => {
+            console.log('error');
             response.error(req, res, 'Usuario o contraseña incorrecto', 500, err);
         });
 });
