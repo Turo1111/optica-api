@@ -79,7 +79,12 @@ router.post('/login', function(req, res) {
     controller.loginEmpleado(req.body.usuario, req.body.password)
         .then(data => {
             if (! bcrypt.compareSync(req.body.password, data[0].password)) {
-                response.error(req, res, 'Usuario o contraseña incorrecto', 500, err);
+                return res.status(400).json({
+                    ok: false,
+                    err: {
+                        message: "Usuario o contraseña incorrectos"
+                    }
+                 })
             }else{
                 const token = jwt.sign({ usuario: data[0].usuario }, api);
                 emitSocket('empleado', {
@@ -89,12 +94,11 @@ router.post('/login', function(req, res) {
                 return res.status(200).json({
                   ok: true,
                   token: token,
-                  data: data[0]
+                  data: data
                 });
             }
         })
         .catch(err => {
-            console.log('error');
             response.error(req, res, 'Usuario o contraseña incorrecto', 500, err);
         });
 });
