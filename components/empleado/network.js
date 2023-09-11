@@ -76,6 +76,7 @@ router.get('/', function(req, res) {
 });
 
 router.post('/login', function(req, res) {
+    console.log(req.body.usuario, req.body.password);
     controller.loginEmpleado(req.body.usuario, req.body.password)
         .then(data => {
             if (! bcrypt.compareSync(req.body.password, data[0].password)) {
@@ -86,10 +87,11 @@ router.post('/login', function(req, res) {
                     action: 'login',
                     res: data[0]
                 });
+                console.log(data[0]);
                 return res.status(200).json({
                   ok: true,
                   token: token,
-                  data: data
+                  data: data[0]
                 });
             }
         })
