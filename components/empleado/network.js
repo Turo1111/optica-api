@@ -79,6 +79,8 @@ router.post('/login', function(req, res) {
     console.log(req.body.usuario, req.body.password);
     controller.loginEmpleado(req.body.usuario, req.body.password)
         .then(data => {
+            
+            console.log(data[0]);
             if (! bcrypt.compareSync(req.body.password, data[0].password)) {
                 response.error(req, res, 'Usuario o contraseña incorrecto', 500, err);
             }else{
@@ -87,7 +89,6 @@ router.post('/login', function(req, res) {
                     action: 'login',
                     res: data[0]
                 });
-                console.log(data[0]);
                 return res.status(200).json({
                   ok: true,
                   token: token,
