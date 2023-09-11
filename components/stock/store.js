@@ -53,11 +53,19 @@ function patchStock(idStock, stock) {
     )
 }
 
+function patchUpdatePrice(idProducto, stock) {
+    return Model.updateMany(
+        {idProducto: idProducto},
+        {$set: stock}
+    )
+}
+
 module.exports = {
     add: addStock,
 	get: getStock,
     patch: patchStock,
-    find: findExist
+    find: findExist,
+    updatePrice: patchUpdatePrice,
 
 }
 

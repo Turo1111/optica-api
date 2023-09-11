@@ -11,7 +11,7 @@ function findExist(dni) {
 
 function getCliente() {
     return Model.aggregate([
-        {
+        /* {
             $lookup: {
                 from: "senias",
                 localField: "_id",
@@ -36,7 +36,7 @@ function getCliente() {
                     { "senia.estado": true } // Si hay señas con estado true
                 ]
             }
-        },
+        }, */
         {
             $lookup: {
                 from: "ventas",
@@ -45,21 +45,30 @@ function getCliente() {
                 as: "venta"
             }
         },
+        
         {
             $project: {
                 nombreCompleto: 1,
                 telefono: 1,
                 dni: 1,
-                senia: { $ifNull: ["$senia", null] },
+                /* senia: { $ifNull: ["$senia", null] }, */
                 venta: {
                     $filter: {
                         input: "$venta",
                         as: "ventaItem",
-                        cond: { $lt: ["$$ventaItem.dineroIngresado", "$$ventaItem.total"] }
+                        cond: {
+                            $and: [
+                                { $lt: ["$$ventaItem.dineroIngresado", "$$ventaItem.total"] },
+                                {
+                                    $in: ["$$ventaItem.tipoPago.descripcion", ["EFECTIVO", "CUENTA CORRIENTE"]]
+                                }
+                            ]
+                        }
                     }
                 }
             }
         },
+        
         {
             $unwind: {
                 path: "$senia",
@@ -80,7 +89,7 @@ function getCliente() {
                     }
                 }
             }
-        },
+        }, 
         {
             $project: {
                 nombreCompleto: 1,
@@ -89,7 +98,7 @@ function getCliente() {
                 senia: 1,
                 cuentaCorriente: { $sum: "$venta.diferencia" }
             }
-        }
+        } 
     ]);
 }
 

@@ -6,7 +6,7 @@ function addReg(reg) {
 }
 
 function getReg() {
-    return Model.find().sort({ fechaHora: 1 });
+    return Model.find().sort({ fechaHora: -1 });
 }
 
 module.exports = {

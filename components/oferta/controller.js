@@ -1,5 +1,6 @@
 const store = require('./store');
 const mongoose = require('mongoose');
+const moment = require('moment-timezone');
 
 
 function addOferta(oferta) {
@@ -10,6 +11,7 @@ function addOferta(oferta) {
     if (oferta.sucursales.length !== 0) {
         oferta.sucursales = oferta.sucursales.map(elem => new mongoose.Types.ObjectId(elem))
     }
+
 
     return store.add({...oferta, idProducto: new mongoose.Types.ObjectId(oferta.idProducto) });
 }

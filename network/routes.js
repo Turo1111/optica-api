@@ -16,6 +16,9 @@ const color = require('../components/color/network');
 const marca = require('../components/marca/network');
 const roles = require('../components/roles/network');
 const reg = require('../components/registros/network');
+const proveedor = require('../components/proveedor/network');
+const cierreCaja = require('../components/cierrecaja/network');
+const retirodinero = require('../components/retirardinero/network');
 
 const routes = function (server) {
     server.use('/producto', producto);
@@ -36,6 +39,9 @@ const routes = function (server) {
     server.use('/marca', marca);
     server.use('/roles', roles);
     server.use('/reg', reg);
+    server.use('/proveedor', proveedor);
+    server.use('/cierreCaja', cierreCaja);
+    server.use('/retirodinero', retirodinero);
 }
 
 module.exports = routes;

@@ -51,7 +51,6 @@ router.get('/:idCliente', function(req, res) {
                 }
                 controller.getSenia(req.params.idCliente)
                 .then(data => {
-                    console.log(data);
                     response.success(req, res, data, 200);
                 })
                 .catch(err => {

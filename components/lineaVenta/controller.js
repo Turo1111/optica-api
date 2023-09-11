@@ -7,6 +7,12 @@ function addLineaVenta(lineaVenta) {
         return Promise.reject('Invalid user list');
     } 
 
+    if (lineaVenta.idLente) {
+        if ( isObjectId(lineaVenta.idLente)) {
+            lineaVenta.idLente = new mongoose.Types.ObjectId(lineaVenta.idLente);
+        }
+    }
+
     return store.add({
         ...lineaVenta,
         idProducto: new mongoose.Types.ObjectId(lineaVenta.idProducto),

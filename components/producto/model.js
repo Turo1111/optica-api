@@ -27,10 +27,16 @@ const mySchema = new Schema({
     },
     precioGeneral: {
         type: Number,
+        required: true,
     },
     idCategoria : {
         type: Schema.ObjectId,
         ref: 'Categoria',
+        required: true,
+    },
+    idProveedor : {
+        type: Schema.ObjectId,
+        ref: 'Proveedor',
         required: true,
     },
     idMarca : {

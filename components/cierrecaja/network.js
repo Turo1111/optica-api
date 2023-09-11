@@ -2,31 +2,24 @@ const express = require('express');
 const response = require('../../network/response');
 const controller = require('./controller');
 const router = express.Router();
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
 const {emitSocket} = require('../../socket')
 const { isAuth } = require('../../isAuth');
 
-router.post('/', upload.single('imagen'), function(req, res) {
+router.post('/', function(req, res) {
     try {
         isAuth(req.headers.authorization)
             .then(decoded => {
                 if (decoded.error) {
                     return response.error(req, res, decoded.error, 401);
                 }
-                controller.findExist(req.body.codigo)
-                .then(producto=>{
-                    if (!producto) {
-                        controller.addProducto(req.body, req.file)
+                controller.findExist(req.body.idSucursal, req.body.fecha)
+                .then(cc=>{
+                    if (true) {
+                        controller.addCierreCaja(req.body)
                         .then(data => {
-                            emitSocket('producto', {
+                            emitSocket('cierreCaja', {
                                 action: 'create',
-                                res: {
-                                    ...data._doc,
-                                    categoria: req.body.categoria,
-                                    marca: req.body.marca,
-                                    color: req.body.color,
-                                }
+                                res: data
                             });
                             return response.success(req, res, data, 200);
                         })
@@ -34,12 +27,13 @@ router.post('/', upload.single('imagen'), function(req, res) {
                             response.error(req, res, 'Internal error', 500, err); 
                         });
                     }else{
-                        response.error(req, res, 'Codigo ya existente', 500, err);
+                        response.error(req, res, 'Cierre de caja ya existente', 500, err);
                     }
                 })
                 .catch(err=>{
-                    response.error(req, res, 'Codigo ya existente', 500, err); 
+                    response.error(req, res, 'Cierre de caja ya existente', 500, err); 
                 })
+                
             })
             .catch(error => {
                 return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
@@ -47,6 +41,7 @@ router.post('/', upload.single('imagen'), function(req, res) {
     } catch (error) {
         return response.error(req, res, 'Error en el servidor', 500, error);
     }
+    
 });
 
 router.get('/', function(req, res) {
@@ -56,7 +51,7 @@ router.get('/', function(req, res) {
                 if (decoded.error) {
                     return response.error(req, res, decoded.error, 401);
                 }
-                controller.getProducto()
+                controller.getCierreCaja()
                 .then(data => {
                     response.success(req, res, data, 200);
                 })
@@ -72,42 +67,15 @@ router.get('/', function(req, res) {
     }
 });
 
-router.get('/wstock/:idSucursal', function(req, res) {
+router.get('/lastDate/:idSucursal', function(req, res) {
     try {
         isAuth(req.headers.authorization)
             .then(decoded => {
                 if (decoded.error) {
                     return response.error(req, res, decoded.error, 401);
                 }
-                controller.getWStock(req.params.idSucursal)
+                controller.getLastDate(req.params.idSucursal)
                 .then(data => {
-                    response.success(req, res, data, 200);
-                })
-                .catch(err => {
-                    response.error(req, res, 'Internal error', 500, err);
-                });
-            })
-            .catch(error => {
-                return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
-            });
-    } catch (error) {
-        return response.error(req, res, 'Error en el servidor', 500, error);
-    }
-});
-
-router.patch('/:idProducto', upload.single('newimagen'), function(req, res) {
-    try {
-        isAuth(req.headers.authorization)
-            .then(decoded => {
-                if (decoded.error) {
-                    return response.error(req, res, decoded.error, 401);
-                }
-                controller.patchProducto(req.params.idProducto, req.body, req.file)
-                .then(data => {
-                    emitSocket('producto', {
-                        action: 'patch',
-                        res: req.body
-                    });
                     response.success(req, res, data, 200);
                 })
                 .catch(err => {

@@ -6,21 +6,11 @@ const mySchema = new Schema({
     id: {
         type: Schema.ObjectId,
     },
-    nombreCompleto: {
+    descripcion: {
         type: String,
         required: true,
-    },
-    telefono: {
-        type: String,
-    },
-    dni: {
-        type: String,
-        required: true
-    },
-    estado: {
-        type: String
     }
 });
 
-const model = mongoose.model('Cliente', mySchema);
+const model = mongoose.model('Proveedor', mySchema);
 module.exports = model;

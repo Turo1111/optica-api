@@ -43,6 +43,10 @@ function getProducto() {
     return store.get();
 }
 
+function getWStock(idSucursal) {
+    return store.getWStock(new mongoose.Types.ObjectId(idSucursal));
+}
+
 function findExist(codigo) {
     if (!codigo) {
         return Promise.reject('Invalid user list');
@@ -86,8 +90,6 @@ function patchProducto(idProducto, producto, imagenFile) {
             productoData.idColor = new mongoose.Types.ObjectId(producto.color);
         }
     }
-    
-    console.log("producto", productoData);
 
     return store.patch(idProducto, productoData);
 }
@@ -139,5 +141,6 @@ module.exports = {
     addProducto,
     getProducto,
     patchProducto,
-    findExist
+    findExist,
+    getWStock
 }

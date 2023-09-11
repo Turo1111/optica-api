@@ -31,10 +31,14 @@ function patchStock(idStock, stock) {
     return store.patch(idStock, stock);
 }
 
+function patchUpdatePrice(idProducto, stock) {
+    return store.updatePrice(new mongoose.Types.ObjectId(idProducto), stock);
+}
 
 module.exports = {
     addStock,
     getStock,
     patchStock,
-    findExist
+    findExist,
+    patchUpdatePrice
 }

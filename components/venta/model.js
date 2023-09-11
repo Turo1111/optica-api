@@ -27,6 +27,20 @@ const mySchema = new Schema({
     observacion: {
         type: String,
     },
+    estado: {
+        type: String,
+    },
+    useSenia: {
+        type: Boolean,
+    },
+    pago: [{
+        total: {
+            type: Number,
+        },
+        fecha: {
+            type: Date,
+        },
+    }],
     tipoPago: {
         descripcion: {
             type: String,

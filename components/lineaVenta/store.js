@@ -24,12 +24,12 @@ function getLineaVenta(idVenta) {
             $project: {
                 cantidad: 1,
                 total: 1,
-                producto: "$producto.descripcion",
+                descripcion: "$producto.descripcion",
             }
         },
         {
             $unwind: {
-                path: "$producto",
+                path: "$descripcion",
                 preserveNullAndEmptyArrays: true
             }
         }

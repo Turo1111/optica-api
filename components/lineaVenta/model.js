@@ -14,6 +14,12 @@ const mySchema = new Schema({
         type: Number,
         required: true,
     },
+    totalTaller: {
+        type: Number
+    },
+    idLente: {
+        type: Schema.ObjectId,
+    },
     idProducto : {
         type: Schema.ObjectId,
         ref: 'Producto',

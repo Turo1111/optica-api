@@ -1,4 +1,6 @@
 const Model = require('./model');
+const CierreCajaModel = require('../cierrecaja/model');
+const RetiroDinero = require('../retirardinero/model');
 
 function addVenta(venta) {
     const vent = new Model(venta);
@@ -100,11 +102,84 @@ function getVenta() {
                     dineroIngresado: { $ifNull: ["$dineroIngresado", null] },
                     orden: { $ifNull: ["$orden", null] },
                     cantidadProductos: { $size: '$cantidadProductos' },
-                    obraSocialDescripcion: "$obraSocial.descripcion"
+                    obraSocialDescripcion: "$obraSocial.descripcion",
+                    pago: 1
                 }
             }  /* */
 		]
-	)
+	).sort({ fecha: -1 })
+}
+
+function getLastCC(idSucursal) {
+  return CierreCajaModel
+      .findOne({ idSucursal })
+      .sort({ fecha: -1 }) // Ordena en orden descendente para obtener el último cierre
+      .exec();
+}
+
+function getLastRetiro(idSucursal, fecha) {
+
+  const query = {
+    idSucursal
+  };
+
+  if (fecha !== undefined) {
+    query.fecha = { $gte: fecha };
+  }
+
+  return RetiroDinero
+      .find(query)
+      .sort({ fecha: -1 }) // Ordena en orden descendente para obtener el último cierre
+      .exec();
+}
+  
+function getDineroIngresado(idSucursal, fecha) {
+
+  const query = {
+    idSucursal,
+    $or: [
+      { "tipoPago.descripcion": "EFECTIVO" },
+      { "tipoPago.descripcion": "EFECTIVO Y TARJETA" },
+      { "tipoPago.descripcion": "CUENTA CORRIENTE" }
+    ]
+  };
+
+  // Agregar el filtro de fecha si fecha no es undefined
+  if (fecha !== undefined) {
+    query.fecha = { $gte: fecha };
+  }
+
+  // Ejecutar la consulta
+  return Model.find(query).exec();
+}
+
+function getPago(idSucursal, fecha) {
+  return Model.aggregate([
+    {
+      $match: {
+        idSucursal: idSucursal,
+        $or: [
+          { "tipoPago.descripcion": "EFECTIVO" },
+          { "tipoPago.descripcion": "EFECTIVO Y TARJETA" },
+          { "tipoPago.descripcion": "CUENTA CORRIENTE" }
+        ]
+      }
+    },
+    {
+      $unwind: {
+        path: "$pago",
+        preserveNullAndEmptyArrays: true
+      }
+    }, 
+    {
+      $match: {
+        "pago.fecha": {
+          $gte: fecha !== undefined ? fecha : new Date(0) // Filtro de fecha si no es undefined, de lo contrario, no apliques el filtro (nunca coincide).
+        }
+      }
+    } 
+  ])
+  .exec();
 }
 
 function patchVenta(idVenta, venta) {
@@ -116,6 +191,10 @@ function patchVenta(idVenta, venta) {
 
 module.exports = {
     add: addVenta,
-	get: getVenta,
-    patch: patchVenta
+	  get: getVenta,
+    patch: patchVenta,
+    getLastCC,
+    getDineroIngresado,
+    getPago,
+    getLastRetiro
 }
