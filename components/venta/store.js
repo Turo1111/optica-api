@@ -182,6 +182,172 @@ function getPago(idSucursal, fecha) {
   .exec();
 }
 
+function getTotalVenta(query) {
+  const fechaInicio = new Date(query.fechaInicio);
+  const fechaFinal = new Date(query.fechaFinal);
+
+  const matchFilter = {
+    fecha: {
+      $gte: fechaInicio,
+      $lte: fechaFinal,
+    },
+  };
+
+  if (query.sucursales && query.sucursales.length > 0) {
+    matchFilter.idSucursal = {
+      $in: query.sucursales,
+    };
+  }
+
+  if (query.tipoPago && query.tipoPago.length > 0) {
+    matchFilter['tipoPago.descripcion'] = {
+      $in: query.tipoPago,
+    };
+  }
+
+  if (query.obraSociales && query.obraSociales.length > 0) {
+    matchFilter['obraSocial._id'] = {
+      $in: query.obraSociales,
+    };
+  }
+
+  return Model.aggregate([
+    {
+      $lookup: {
+        from: "ordens",
+        localField: "idOrden",
+        foreignField: "_id",
+        as: "orden",
+      },
+    },
+    {
+      $unwind: {
+        path: "$orden",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "obrasocials",
+        localField: "orden.idObraSocial",
+        foreignField: "_id",
+        as: "obraSocial",
+      },
+    },
+    {
+      $unwind: {
+        path: "$obraSocial",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "sucursals",
+        localField: "idSucursal",
+        foreignField: "_id",
+        as: "sucursal",
+      },
+    },
+    {
+      $unwind: {
+        path: "$sucursal",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $match: matchFilter,
+    },
+  ]).exec();
+}
+
+function getTotalLastVenta(query) {
+  const fechaInicio = new Date(query.fechaInicio);
+  const fechaFinal = new Date(query.fechaFinal);
+
+  fechaInicio.setMonth(fechaInicio.getMonth() - 1);
+  fechaFinal.setMonth(fechaFinal.getMonth() - 1);
+
+  const matchFilter = {
+    fecha: {
+      $gte: fechaInicio,
+      $lte: fechaFinal,
+    },
+  };
+
+  if (query.sucursales && query.sucursales.length > 0) {
+    matchFilter.idSucursal = {
+      $in: query.sucursales,
+    };
+  }
+
+  if (query.tipoPago && query.tipoPago.length > 0) {
+    matchFilter['tipoPago.descripcion'] = {
+      $in: query.tipoPago,
+    };
+  }
+
+  if (query.obraSociales && query.obraSociales.length > 0) {
+    matchFilter['obraSocial._id'] = {
+      $in: query.obraSociales,
+    };
+  }else{
+    matchFilter.$or = [
+      { 'obraSocial._id': { $in: query.obraSociales } },
+      { idOrden: null },
+    ];
+  }
+
+
+  return Model.aggregate([
+    {
+      $lookup: {
+        from: "ordens",
+        localField: "idOrden",
+        foreignField: "_id",
+        as: "orden",
+      },
+    },
+    {
+      $unwind: {
+        path: "$orden",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "obrasocials",
+        localField: "orden.idObraSocial",
+        foreignField: "_id",
+        as: "obraSocial",
+      },
+    },
+    {
+      $unwind: {
+        path: "$obraSocial",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "sucursals",
+        localField: "idSucursal",
+        foreignField: "_id",
+        as: "sucursal",
+      },
+    },
+    {
+      $unwind: {
+        path: "$sucursal",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $match: matchFilter,
+    },
+  ]).exec();
+}
+
+
 function patchVenta(idVenta, venta) {
     return Model.updateOne(
         {_id: idVenta},
@@ -196,5 +362,7 @@ module.exports = {
     getLastCC,
     getDineroIngresado,
     getPago,
-    getLastRetiro
+    getLastRetiro,
+    getTotalVenta,
+    getTotalLastVenta
 }

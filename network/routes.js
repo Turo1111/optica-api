@@ -19,6 +19,7 @@ const reg = require('../components/registros/network');
 const proveedor = require('../components/proveedor/network');
 const cierreCaja = require('../components/cierrecaja/network');
 const retirodinero = require('../components/retirardinero/network');
+const contabilidad = require('../components/contabilidad/network');
 
 const routes = function (server) {
     server.use('/producto', producto);
@@ -42,6 +43,7 @@ const routes = function (server) {
     server.use('/proveedor', proveedor);
     server.use('/cierreCaja', cierreCaja);
     server.use('/retirodinero', retirodinero);
+    server.use('/contabilidad', contabilidad);
 }
 
 module.exports = routes;

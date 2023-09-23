@@ -32,10 +32,27 @@ function getLastDate(idSucursal) {
     return store.getLastDate(new mongoose.Types.ObjectId(idSucursal));
 }
 
+async function getTotalCC(query) {
+    try {
+        
+        const cc = await store.getTotalCC({...query, 
+            sucursales: query.sucursales.map(item => new mongoose.Types.ObjectId(item))
+        })
+        const total = cc.reduce((total, sale) => {
+            return total + (sale.total || 0);
+        }, 0);
+
+        return { total: (parseFloat(total)).toFixed(2) }
+
+    } catch (error) {
+        return Promise.reject('Error al buscar ventas '+` ${error}`);
+    }
+}
 
 module.exports = {
     addCierreCaja,
     getCierreCaja,
     findExist,
-    getLastDate
+    getLastDate,
+    getTotalCC
 }

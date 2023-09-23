@@ -44,6 +44,59 @@ async function getSaleToday(idSucursal) {
     }
 }
 
+async function getTotalVenta(query) {
+    try {
+        
+        const ventas = await store.getTotalVenta({...query, 
+            sucursales: query.sucursales.map(item => new mongoose.Types.ObjectId(item)),
+            obraSociales: query.obraSociales.map(item => new mongoose.Types.ObjectId(item))
+        })
+        const lastVentas = await store.getTotalLastVenta({...query, 
+            sucursales: query.sucursales.map(item => new mongoose.Types.ObjectId(item)),
+            obraSociales: query.obraSociales.map(item => new mongoose.Types.ObjectId(item))
+        })
+        const total = ventas.reduce((total, sale) => {
+          return total + (sale.total || 0);
+        }, 0);
+        const totalLast = lastVentas.reduce((total, sale) => {
+            return total + (sale.total || 0);
+        }, 0);
+        const tipoPago = ventas.reduce((acumulador, venta) => {
+            const { total, tipoPago } = venta;
+            const descripcion = tipoPago.descripcion;
+          
+            if (!acumulador[descripcion]) {
+              acumulador[descripcion] = { label: descripcion, cantidad: 0, value: 0 };
+            }
+          
+            acumulador[descripcion].cantidad++;
+            acumulador[descripcion].value += total;
+          
+            return acumulador;
+        }, {});
+        const porTipoPago = Object.values(tipoPago);
+        const sucursal = ventas.reduce((acumulador, venta) => {
+            const { total, sucursal } = venta;
+            const descripcion = sucursal.descripcion;
+          
+            if (!acumulador[descripcion]) {
+              acumulador[descripcion] = { label: descripcion, cantidad: 0, value: 0 };
+            }
+          
+            acumulador[descripcion].cantidad++;
+            acumulador[descripcion].value += total;
+          
+            return acumulador;
+        }, {});
+        const porSucursal = Object.values(sucursal);
+        const crecimiento = (((parseFloat(total)-parseFloat(totalLast))/parseFloat(totalLast))*100).toFixed(2)
+
+        return { total: (parseFloat(total)).toFixed(2), cantidad: ventas.length, ventas:  ventas, tipoPago: porTipoPago, sucursal: porSucursal, crecimiento: crecimiento}
+
+    } catch (error) {
+        return Promise.reject('Error al buscar ventas '+` ${error}`);
+    }
+}
 
 function patchVenta(idVenta, venta) {
     return store.patch(idVenta, venta);
@@ -54,5 +107,6 @@ module.exports = {
     addVenta,
     getVenta,
     patchVenta,
-    getSaleToday
+    getSaleToday,
+    getTotalVenta
 }

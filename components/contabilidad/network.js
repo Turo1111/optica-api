@@ -5,43 +5,14 @@ const router = express.Router();
 const {emitSocket} = require('../../socket')
 const { isAuth } = require('../../isAuth');
 
-
-router.post('/', function(req, res) {
+router.post('/mensual', function(req, res) {
     try {
         isAuth(req.headers.authorization)
             .then(decoded => {
                 if (decoded.error) {
                     return response.error(req, res, decoded.error, 401);
                 }
-                controller.addVenta(req.body)
-                .then(data => {
-                    emitSocket('venta', {
-                        action: 'create',
-                        res: data
-                    });
-                    return response.success(req, res, data, 200);
-                })
-                .catch(err => {
-                    response.error(req, res, 'Internal error', 500, err); 
-                });
-            })
-            .catch(error => {
-                return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
-            });
-    } catch (error) {
-        return response.error(req, res, 'Error en el servidor', 500, error);
-    }
-    
-});
-
-router.get('/', function(req, res) {
-    try {
-        isAuth(req.headers.authorization)
-            .then(decoded => {
-                if (decoded.error) {
-                    return response.error(req, res, decoded.error, 401);
-                }
-                controller.getVenta()
+                controller.getTotalMes(req.body)
                 .then(data => {
                     response.success(req, res, data, 200);
                 })
@@ -57,42 +28,15 @@ router.get('/', function(req, res) {
     }
 });
 
-router.get('/:idSucursal', function(req, res) {
+router.post('/anual', function(req, res) {
     try {
         isAuth(req.headers.authorization)
             .then(decoded => {
                 if (decoded.error) {
                     return response.error(req, res, decoded.error, 401);
                 }
-                controller.getSaleToday(req.params.idSucursal)
-                .then((data) => {
-                    response.success(req, res, data, 200);
-                })
-                .catch(err => {
-                    response.error(req, res, 'Internal error', 500, err);
-                });
-            })
-            .catch(error => {
-                return response.error(req, res, 'Token Inválido, cierre y vuelva abrir sesion', 401, error);
-            });
-    } catch (error) {
-        return response.error(req, res, 'Error en el servidor', 500, error);
-    }
-});
-
-router.patch('/:idVenta', function(req, res) {
-    try {
-        isAuth(req.headers.authorization)
-            .then(decoded => {
-                if (decoded.error) {
-                    return response.error(req, res, decoded.error, 401);
-                }
-                controller.patchVenta(req.params.idVenta, req.body)
+                controller.getTotalAnual(req.body)
                 .then(data => {
-                    emitSocket('venta', {
-                        action: 'patch',
-                        res: req.body
-                    });
                     response.success(req, res, data, 200);
                 })
                 .catch(err => {
@@ -107,14 +51,14 @@ router.patch('/:idVenta', function(req, res) {
     }
 });
 
-router.post('/total', function(req, res) {
+router.post('/semana', function(req, res) {
     try {
         isAuth(req.headers.authorization)
             .then(decoded => {
                 if (decoded.error) {
                     return response.error(req, res, decoded.error, 401);
                 }
-                controller.getTotalVenta(req.body)
+                controller.getTotalSemana(req.body)
                 .then(data => {
                     response.success(req, res, data, 200);
                 })

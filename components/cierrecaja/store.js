@@ -62,9 +62,34 @@ function getLastDate(idSucursal) {
     .exec(); 
 }
 
+function getTotalCC(query) {
+    const fechaInicio = new Date(query.fechaInicio);
+    const fechaFinal = new Date(query.fechaFinal);
+  
+    const matchFilter = {
+      fecha: {
+        $gte: fechaInicio,
+        $lte: fechaFinal,
+      },
+    };
+  
+    if (query.sucursales && query.sucursales.length > 0) {
+      matchFilter.idSucursal = {
+        $in: query.sucursales,
+      };
+    }
+  
+    return Model.aggregate([
+      {
+        $match: matchFilter,
+      },
+    ]).exec();
+  }
+
 module.exports = {
     add: addCierreCaja,
 	get: getCierreCaja,
     find: findExist,
-    getLastDate
+    getLastDate,
+    getTotalCC
 }
