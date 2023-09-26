@@ -60,26 +60,25 @@ function patchUpdatePrice(idProducto, stock) {
     )
 }
 
+function patchSinId(stock) {
+    return Model.updateOne(
+        {
+            $and: [
+              { idProducto: stock.idProducto },
+              { idSucursal: stock.idSucursal }
+            ]
+          },
+          {
+            $set: stock
+          },
+    )
+}
+
 module.exports = {
     add: addStock,
 	get: getStock,
     patch: patchStock,
     find: findExist,
     updatePrice: patchUpdatePrice,
-
+    patchSinId
 }
-
-			/* {
-                $lookup: {
-                 from: "sucursals",
-                 localField:  "idSucursal" ,
-                 foreignField: "_id",
-                 as: "sucursal"
-                }
-            },
-            {
-                $unwind: {
-                    path: "$sucursal",
-                    preserveNullAndEmptyArrays: true
-                }
-            },  */

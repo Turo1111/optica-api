@@ -33,14 +33,14 @@ router.post('/', function(req, res) {
     
 });
 
-router.get('/', function(req, res) {
+router.get('/:idCompra', function(req, res) {
     try {
         isAuth(req.headers.authorization)
             .then(decoded => {
                 if (decoded.error) {
                     return response.error(req, res, decoded.error, 401);
                 }
-                controller.getLineaCompra()
+                controller.getLineaCompra(req.params.idCompra)
                 .then(data => {
                     response.success(req, res, data, 200);
                 })

@@ -17,8 +17,11 @@ const mySchema = new Schema({
     observacion: {
         type: String,
     },
-    proveedor: {
-        type: String,
+    idProveedor: {
+        type: Schema.ObjectId,
+    },
+    idSucursal: {
+        type: Schema.ObjectId,
     }
 });
 

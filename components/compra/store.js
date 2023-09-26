@@ -6,7 +6,53 @@ function addCompra(compra) {
 }
 
 function getCompra() {
-    return Model.find()
+    return Model.aggregate([
+        {
+            $lookup: {
+                from: "proveedors",
+                localField: "idProveedor",
+                foreignField: "_id",
+                as: "proveedor"
+            }
+        },
+        {
+            $unwind: {
+                path: "$proveedor",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+                from: "sucursals",
+                localField: "idSucursal",
+                foreignField: "_id",
+                as: "sucursal"
+            }
+        },
+        {
+            $unwind: {
+                path: "$sucursal",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $lookup: {
+             from: "lineacompras",
+             localField:  "_id" ,
+             foreignField: "idCompra",
+             as: "cantidadProductos"
+            }
+        },
+        {
+            $project: {
+                total: 1,
+                proveedor: '$proveedor.descripcion',
+                sucursal: '$sucursal.descripcion',
+                fecha: 1,
+                cantidadProductos: { $size: '$cantidadProductos' },
+            }
+        }
+    ])
 }
 
 function patchCompra(idCompra, compra) {

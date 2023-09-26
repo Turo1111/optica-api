@@ -6,7 +6,6 @@ function addStock(stock) {
     if (!stock) {
         return Promise.reject('Invalid user list');
     } 
-
     return store.add({
         ...stock,
         idSucursal: new mongoose.Types.ObjectId(stock.idSucursal),
@@ -35,10 +34,15 @@ function patchUpdatePrice(idProducto, stock) {
     return store.updatePrice(new mongoose.Types.ObjectId(idProducto), stock);
 }
 
+function patchSinId(stock) {
+    return store.patchSinId(stock);
+}
+
 module.exports = {
     addStock,
     getStock,
     patchStock,
     findExist,
-    patchUpdatePrice
+    patchUpdatePrice,
+    patchSinId
 }

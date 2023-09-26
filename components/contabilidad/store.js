@@ -447,8 +447,6 @@ function getTotalAnual(query) {
   const startDate = new Date(currentYear-3, 0, 1); // 1 de enero del año actual
   const endDate = new Date(currentYear+3, 11, 31); // 31 de diciembre del año actual
 
-  console.log('fechas', startDate, endDate)
-
   let pipeLine = []
 
   if (query.tipoDato === 'TOTAL_SUC') {
@@ -491,9 +489,7 @@ function getTotalSemana(query) {
   const lastDayOfWeek = firstDayOfWeek + 6;
   const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), firstDayOfWeek);
   const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), lastDayOfWeek);
-
-  console.log('fechas', startDate, endDate)
-
+  
   let pipeLine = []
 
   if (query.tipoDato === 'TOTAL_SUC') {

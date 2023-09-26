@@ -29,6 +29,9 @@ const mySchema = new Schema({
         type: Number,
         required: true,
     },
+    precioCompra: {
+        type: Number,
+    },
     idCategoria : {
         type: Schema.ObjectId,
         ref: 'Categoria',

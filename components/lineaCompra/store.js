@@ -5,8 +5,35 @@ function addLineaCompra(lineaCompra) {
     return lc.save();
 }
 
-function getLineaCompra() {
-    return Model.find()
+function getLineaCompra(idCompra) {
+    return Model.aggregate([
+        {
+            $match: {
+                idCompra: idCompra
+            }
+        },
+        {
+            $lookup: {
+             from: "productos",
+             localField:  "idProducto" ,
+             foreignField: "_id",
+             as: "producto"
+            }
+        },
+        {
+            $project: {
+                cantidad: 1,
+                precio: 1,
+                descripcion: "$producto.descripcion",
+            }
+        },
+        {
+            $unwind: {
+                path: "$descripcion",
+                preserveNullAndEmptyArrays: true
+            }
+        }
+    ]);
 }
 
 function patchLineaCompra(idLineaCompra, lineaCompra) {

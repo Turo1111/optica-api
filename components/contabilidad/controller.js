@@ -6,8 +6,6 @@ const moment = require('moment-timezone');
 async function getTotalMes(query) {
     try {
 
-      console.log('mensual');
-
         let ventas = await store.getTotalMes(query)
 
         let ventasFaltantes = await agregarDatosFaltantes(ventas, query)
@@ -21,8 +19,6 @@ async function getTotalMes(query) {
 
 async function getTotalAnual(query) {
   try {
-
-    console.log('anual');
 
       let ventas = await store.getTotalAnual(query)
 

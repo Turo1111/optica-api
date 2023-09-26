@@ -14,8 +14,8 @@ function addLineaCompra(lineaCompra) {
     });
 }
 
-function getLineaCompra() {
-    return store.get();
+function getLineaCompra(idCompra) {
+    return store.get(new mongoose.Types.ObjectId(idCompra));
 }
 
 

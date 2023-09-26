@@ -7,7 +7,7 @@ function addCompra(compra) {
         return Promise.reject('Invalid user list');
     } 
 
-    return store.add(compra);
+    return store.add({...compra, idSucursal: new mongoose.Types.ObjectId(compra.idSucursal), idProveedor: new mongoose.Types.ObjectId(compra.idProveedor)});
 }
 
 function getCompra() {
